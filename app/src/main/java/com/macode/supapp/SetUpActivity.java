@@ -86,7 +86,7 @@ public class SetUpActivity extends AppCompatActivity {
         cityAndState = cityAndStateInput.getText().toString();
         phoneNumber = phoneNumberInput.getText().toString();
         profession = professionInput.getText().toString();
-        image = profileImage.toString();
+        image = imageUri.toString();
 
         if (username.isEmpty() || username.length() < 3) {
             showError(usernameInput, "Username must be longer than 3 characters!");
