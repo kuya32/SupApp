@@ -23,7 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputLayout inputEmail, inputPassword, inputConfirmPassword;
     private Button signUpButton;
     private TextView alreadyHaveAnAccount;
-    private FirebaseAuth auth;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
         inputConfirmPassword = findViewById(R.id.signUpConfirmPasswordInput);
         signUpButton = findViewById(R.id.signUpButton);
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccountText);
-        auth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,17 +65,18 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (!confirmPassword.equals(password)) {
             showError(inputConfirmPassword, "Password did not match!");
         } else {
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this, "SignUp was successful!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignUpActivity.this, SetUpActivity.class);
+                        firebaseAuth.getCurrentUser().sendEmailVerification();
+                        Toast.makeText(SignUpActivity.this, "SignUp was successful! Check your email!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(SignUpActivity.this, "SignUp failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
