@@ -39,8 +39,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    // Firebase
+    // Circle Image View
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Firebase Authentication
+    implementation platform('com.google.firebase:firebase-bom:26.3.0')
     implementation 'com.google.firebase:firebase-auth:20.0.2'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
     implementation 'com.google.firebase:firebase-core:18.0.2'
     implementation 'com.google.firebase:firebase-storage:19.2.1'
 
