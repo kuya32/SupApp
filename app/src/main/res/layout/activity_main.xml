@@ -24,9 +24,9 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/add_post_input_area"
             android:hint="Write something..."
-            android:paddingStart="40dp"
+            android:paddingStart="45dp"
             android:paddingTop="8dp"
-            android:paddingEnd="40dp"
+            android:paddingEnd="45dp"
             android:paddingBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +62,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addPostInput" />
+
+        <ProgressBar
+            android:id="@+id/addingPostProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

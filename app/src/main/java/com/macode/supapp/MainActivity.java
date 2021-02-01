@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private EditText postDescInput;
     private Uri imageUri;
 
+    private ProgressBar addingPostProgressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addImagePost = findViewById(R.id.addPostImage);
         sendImagePost = findViewById(R.id.sendPostButton);
         postDescInput = findViewById(R.id.addPostInput);
+        addingPostProgressBar = findViewById(R.id.addingPostProgressBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -123,28 +127,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (imageUri == null) {
             Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
         } else {
-            postImageReference.child(firebaseUser.getUid()).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            addingPostProgressBar.setVisibility(View.VISIBLE);
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            final String stringDate = format.format(date);
+
+            postImageReference.child(firebaseUser.getUid() + " " + stringDate).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        postImageReference.child(firebaseUser.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        postImageReference.child(firebaseUser.getUid() + " " + stringDate).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                Date date = new Date();
-                                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-                                String stringDate = format.format(date);
-
                                 HashMap hashMap = new HashMap();
                                 hashMap.put("datePost", stringDate);
                                 hashMap.put("postImageUrl", uri.toString());
                                 hashMap.put("postDesc", postDesc);
                                 hashMap.put("userProfileImageUrl", profileImageUrlData);
-                                firebasePostReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                hashMap.put("username", usernameData);
+                                firebasePostReference.child(firebaseUser.getUid() + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
+                                        addingPostProgressBar.setVisibility(View.GONE);
                                         if (task.isSuccessful()) {
                                             Toast.makeText(MainActivity.this, "Post added", Toast.LENGTH_SHORT).show();
-                                            addImagePost.setImageURI(null);
+                                            addImagePost.setImageResource(R.drawable.ic_add_post_image);
                                             postDescInput.setText("");
                                         } else {
                                             Toast.makeText(MainActivity.this, "" + task.getException().toString(), Toast.LENGTH_SHORT).show();
