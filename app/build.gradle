@@ -42,6 +42,9 @@ dependencies {
     // Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // Recycler View
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
     // Firebase Authentication
     implementation platform('com.google.firebase:firebase-bom:26.3.0')
     implementation 'com.google.firebase:firebase-auth:20.0.2'
