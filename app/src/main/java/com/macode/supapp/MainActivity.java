@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View view;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference firebaseUserReference, firebasePostReference;
+    private DatabaseReference firebaseUserReference, firebasePostReference, likeReference;
     private StorageReference postImageReference;
     private String profileImageUrlData, usernameData, postDesc;
     private CircleImageView profileImageHeader;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseUserReference = FirebaseDatabase.getInstance().getReference().child("Users");
         firebasePostReference = FirebaseDatabase.getInstance().getReference().child("Posts");
+        likeReference = FirebaseDatabase.getInstance().getReference().child("Likes");
         postImageReference = FirebaseStorage.getInstance().getReference().child("PostImages");
 
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -191,12 +193,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new FirebaseRecyclerAdapter<Posts, MyViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Posts model) {
+                String postKey = getRef(position).getKey();
                 holder.postDesc.setText(model.getPostDesc());
                 String timeAgo = calculateTimeAgo(model.getDatePost());
                 holder.timeAgo.setText(timeAgo);
                 holder.username.setText(model.getUsername());
                 Picasso.get().load(model.getPostImageUrl()).into(holder.postImage);
                 Picasso.get().load(model.getUserProfileImageUrl()).into(holder.profileImage);
+                holder.imageLikeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        likeReference.child(postKey).child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    likeReference.child(postKey).child(firebaseUser.getUid()).removeValue();
+                                    holder.imageLikeButton.setColorFilter(Color.GRAY);
+                                } else {
+                                    likeReference.child(postKey).child(firebaseUser.getUid()).setValue("like");
+                                    holder.imageLikeButton.setColorFilter(Color.rgb(0, 201, 255));
+                                }
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
             }
 
             @NonNull
