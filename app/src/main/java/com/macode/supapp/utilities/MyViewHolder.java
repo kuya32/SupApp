@@ -25,6 +25,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     public ImageButton imageLikeButton, imageCommentButton;
     public TextView username, timeAgo, postDesc, likeCounter, commentCounter;
     public EditText commentInput;
+    public static RecyclerView commentRecyclerView;
 
     public MyViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -40,6 +41,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         commentCounter = itemView.findViewById(R.id.commentCount);
         postCommentButton = itemView.findViewById(R.id.sendCommentButton);
         commentInput = itemView.findViewById(R.id.postCommentInput);
+        commentRecyclerView = itemView.findViewById(R.id.commentRecyclerView);
     }
 
     public void countLikes(String postKey, String uId, final DatabaseReference likeReference) {
@@ -66,6 +68,25 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
                     imageLikeButton.setColorFilter(Color.rgb(0, 201, 255));
                 } else {
                     imageLikeButton.setColorFilter(Color.GRAY);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void countComments(String postKey, String uid, DatabaseReference commentReference) {
+        commentReference.child(postKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    int totalComments = (int) snapshot.getChildrenCount();
+                    commentCounter.setText(totalComments + "");
+                } else {
+                    commentCounter.setText("0");
                 }
             }
 

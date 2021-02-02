@@ -40,9 +40,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.macode.supapp.utilities.CommentViewHolder;
+import com.macode.supapp.utilities.Comments;
 import com.macode.supapp.utilities.MyViewHolder;
 import com.macode.supapp.utilities.Posts;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Comment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private EditText postDescInput;
     private Uri imageUri;
     private FirebaseRecyclerAdapter<Posts, MyViewHolder> adapter;
+    private FirebaseRecyclerAdapter<Comments, CommentViewHolder> commentAdapter;
     private FirebaseRecyclerOptions<Posts> options;
+    private FirebaseRecyclerOptions<Comments> commentOptions;
     private RecyclerView recyclerView;
 
     private ProgressBar addingPostProgressBar;
@@ -202,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Picasso.get().load(model.getPostImageUrl()).into(holder.postImage);
                 Picasso.get().load(model.getUserProfileImageUrl()).into(holder.profileImage);
                 holder.countLikes(postKey, firebaseUser.getUid(), likeReference);
+                holder.countComments(postKey, firebaseUser.getUid(), commentReference);
 
                 holder.imageLikeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -241,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 });
+                loadComments(postKey);
             }
 
             @NonNull
@@ -252,6 +260,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         adapter.startListening();
         recyclerView.setAdapter(adapter);
+    }
+
+    private void loadComments(String postKey) {
+        MyViewHolder.commentRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        commentOptions = new FirebaseRecyclerOptions.Builder<Comments>().setQuery(commentReference.child(postKey), Comments.class).build();
+        commentAdapter = new FirebaseRecyclerAdapter<Comments, CommentViewHolder>(commentOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Comments model) {
+                Picasso.get().load(model.getProfileImageUrl()).into(holder.profileImageComment);
+                holder.commentUsername.setText(model.getUsername());
+                String timeAgo = calculateTimeAgo(model.getCommentDate());
+                holder.commentTimeAgo.setText(timeAgo);
+                holder.comment.setText(model.getComment());
+            }
+
+            @NonNull
+            @Override
+            public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_comment, parent, false);
+                return new CommentViewHolder(view);
+            }
+        };
+        commentAdapter.startListening();
+        MyViewHolder.commentRecyclerView.setAdapter(commentAdapter);
     }
 
     private void addComment(MyViewHolder holder, String postKey, DatabaseReference commentReference, String uid, String comment, String stringDate) {
