@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View view;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private DatabaseReference firebaseUserReference, firebasePostReference, likeReference;
+    private DatabaseReference firebaseUserReference, firebasePostReference, likeReference, commentReference;
     private StorageReference postImageReference;
     private String profileImageUrlData, usernameData, postDesc;
     private CircleImageView profileImageHeader;
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseUserReference = FirebaseDatabase.getInstance().getReference().child("Users");
         firebasePostReference = FirebaseDatabase.getInstance().getReference().child("Posts");
         likeReference = FirebaseDatabase.getInstance().getReference().child("Likes");
+        commentReference = FirebaseDatabase.getInstance().getReference().child("Comments");
         postImageReference = FirebaseStorage.getInstance().getReference().child("PostImages");
 
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -193,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new FirebaseRecyclerAdapter<Posts, MyViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Posts model) {
-                String postKey = getRef(position).getKey();
+                final String postKey = getRef(position).getKey();
                 holder.postDesc.setText(model.getPostDesc());
                 String timeAgo = calculateTimeAgo(model.getDatePost());
                 holder.timeAgo.setText(timeAgo);
                 holder.username.setText(model.getUsername());
                 Picasso.get().load(model.getPostImageUrl()).into(holder.postImage);
                 Picasso.get().load(model.getUserProfileImageUrl()).into(holder.profileImage);
+                holder.countLikes(postKey, firebaseUser.getUid(), likeReference);
+
                 holder.imageLikeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -223,6 +226,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                     }
                 });
+
+                holder.postCommentButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String comment = holder.commentInput.getText().toString();
+                        if (comment.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "Please write something in the comment area!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Date date = new Date();
+                            SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                            final String stringDate = format.format(date);
+                            addComment(holder, postKey, commentReference, firebaseUser.getUid(), comment, stringDate);
+                        }
+                    }
+                });
             }
 
             @NonNull
@@ -234,6 +252,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         adapter.startListening();
         recyclerView.setAdapter(adapter);
+    }
+
+    private void addComment(MyViewHolder holder, String postKey, DatabaseReference commentReference, String uid, String comment, String stringDate) {
+        HashMap hashMap = new HashMap();
+        hashMap.put("commentDate", stringDate);
+        hashMap.put("username", usernameData);
+        hashMap.put("profileImageUrl", profileImageUrlData);
+        hashMap.put("comment", comment);
+
+        commentReference.child(postKey).child(uid + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, "Comment added", Toast.LENGTH_SHORT).show();
+                    adapter.notifyDataSetChanged();
+                    holder.commentInput.setText(null);
+                } else {
+                    Toast.makeText(MainActivity.this, "" + task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
