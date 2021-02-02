@@ -6,18 +6,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.macode.supapp.utilities.MyViewHolder;
+import com.macode.supapp.utilities.Posts;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -57,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView addImagePost, sendImagePost;
     private EditText postDescInput;
     private Uri imageUri;
+    private FirebaseRecyclerAdapter<Posts, MyViewHolder> adapter;
+    private FirebaseRecyclerOptions<Posts> options;
+    private RecyclerView recyclerView;
 
     private ProgressBar addingPostProgressBar;
 
@@ -75,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sendImagePost = findViewById(R.id.sendPostButton);
         postDescInput = findViewById(R.id.addPostInput);
         addingPostProgressBar = findViewById(R.id.addingPostProgressBar);
+        recyclerView = findViewById(R.id.mainRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -106,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
+        loadPosts();
     }
 
     @Override
@@ -166,6 +181,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
+    }
+
+    private void loadPosts() {
+        options = new FirebaseRecyclerOptions.Builder<Posts>().setQuery(firebasePostReference, Posts.class).build();
+        adapter = new FirebaseRecyclerAdapter<Posts, MyViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Posts model) {
+                holder.postDesc.setText(model.getPostDesc());
+                holder.timeAgo.setText(model.getDatePost());
+                holder.username.setText(model.getUsername());
+                Picasso.get().load(model.getPostImageUrl()).into(holder.postImage);
+                Picasso.get().load(model.getUserProfileImageUrl()).into(holder.profileImage);
+            }
+
+            @NonNull
+            @Override
+            public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_post_view, parent, false);
+                return new MyViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
