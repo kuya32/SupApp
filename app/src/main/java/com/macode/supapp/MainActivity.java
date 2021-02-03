@@ -357,7 +357,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.home) {
 
         } else if (item.getItemId() == R.id.profile) {
-
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.friends) {
 
         } else if (item.getItemId() == R.id.addFindFriends) {
