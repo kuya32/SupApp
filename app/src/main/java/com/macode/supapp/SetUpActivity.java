@@ -34,7 +34,7 @@ public class SetUpActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 101;
     private CircleImageView profileImage;
     private EditText usernameInput, cityAndStateInput, phoneNumberInput, professionInput;
-    private String username, cityAndState, phoneNumber, profession, image;
+    private String username, cityAndState, phoneNumber, profession;
     private Button saveButton;
     private Uri imageUri;
     private FirebaseAuth firebaseAuth;
@@ -86,7 +86,6 @@ public class SetUpActivity extends AppCompatActivity {
         cityAndState = cityAndStateInput.getText().toString();
         phoneNumber = phoneNumberInput.getText().toString();
         profession = professionInput.getText().toString();
-        image = profileImage.toString();
 
         if (username.isEmpty() || username.length() < 3) {
             showError(usernameInput, "Username must be longer than 3 characters!");
@@ -103,15 +102,15 @@ public class SetUpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        storageReference.child(firebaseUser.getUid()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        storageReference.child(firebaseUser.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
+                            public void onSuccess(Uri uri) {
                                 HashMap hashMap = new HashMap();
                                 hashMap.put("username", username);
                                 hashMap.put("cityAndState", cityAndState);
                                 hashMap.put("phoneNumber", phoneNumber);
                                 hashMap.put("profession", profession);
-                                hashMap.put("profileImage", image);
+                                hashMap.put("profileImage", uri.toString());
                                 hashMap.put("status", "Offline");
 
                                 databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {

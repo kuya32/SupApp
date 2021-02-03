@@ -42,6 +42,12 @@ dependencies {
     // Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Recycler View
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
     // Firebase Authentication
     implementation platform('com.google.firebase:firebase-bom:26.3.0')
     implementation 'com.google.firebase:firebase-auth:20.0.2'
@@ -50,7 +56,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:18.0.2'
     implementation 'com.google.firebase:firebase-storage:19.2.1'
 
-    implementation 'com.firebaseui:firebase-ui-database:6.2.1'
+    implementation 'com.firebaseui:firebase-ui-database:6.3.0'
 
     implementation 'com.google.android.material:material:1.2.1'
 }
