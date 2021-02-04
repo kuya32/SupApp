@@ -46,13 +46,10 @@ import com.macode.supapp.utilities.MyViewHolder;
 import com.macode.supapp.utilities.Posts;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Comment;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -363,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.friends) {
 
         } else if (item.getItemId() == R.id.addFindFriends) {
-            Intent intent = new Intent(MainActivity.this, AddFindFriendActivity.class);
+            Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.chat) {

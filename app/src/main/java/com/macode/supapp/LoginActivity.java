@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private void attemptLogin() {
         email = loginEmailInput.getEditText().getText().toString();
         password = loginPasswordInput.getEditText().getText().toString();
-        if (email.isEmpty() || !email.contains("@gmail")) {
+        if (email.isEmpty()) {
             showError(loginEmailInput, "Email is not valid!");
         } else if (password.isEmpty() || password.length() < 5) {
             showError(loginPasswordInput, "Password must be greater than 5 characters!");
