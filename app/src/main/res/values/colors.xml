@@ -11,4 +11,6 @@
     <color name="secondaryColor">#3BD1B3</color>
     <color name="gray">#495F6B</color>
     <color name="lightGreen">#16D803</color>
+    <color name="green">#20C802</color>
+    <color name="red">#D1030A</color>
 </resources>

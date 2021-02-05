@@ -58,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
         password = inputPassword.getEditText().getText().toString();
         confirmPassword = inputConfirmPassword.getEditText().getText().toString();
 
-        if (email.isEmpty() || !email.contains("@gmail")) {
+        if (email.isEmpty()) {
             showError(inputEmail, "Email is not valid!");
         } else if (password.isEmpty() || password.length() < 6) {
             showError(inputPassword, "Password must be greater than 6 characters!");

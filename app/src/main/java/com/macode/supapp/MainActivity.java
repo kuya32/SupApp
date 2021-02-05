@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -46,13 +47,10 @@ import com.macode.supapp.utilities.MyViewHolder;
 import com.macode.supapp.utilities.Posts;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Comment;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -249,6 +247,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 loadComments(postKey);
+                holder.postImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ImageViewActivity.class);
+                        intent.putExtra("url", model.getPostImageUrl());
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull
@@ -361,9 +367,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.friends) {
-
+            Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+            startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.addFindFriends) {
-
+            Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
+            startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.chat) {
 
         } else if (item.getItemId() == R.id.logout) {
