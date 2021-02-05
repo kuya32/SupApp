@@ -247,6 +247,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 loadComments(postKey);
+                holder.postImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ImageViewActivity.class);
+                        intent.putExtra("url", model.getPostImageUrl());
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull
