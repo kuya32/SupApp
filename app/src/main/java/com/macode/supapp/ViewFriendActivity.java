@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -304,6 +305,12 @@ public class ViewFriendActivity extends AppCompatActivity {
                     negativeButton.setVisibility(View.GONE);
                 }
             });
+        }
+
+        if (currentState.equals("friends")) {
+            Intent intent = new Intent(ViewFriendActivity.this, ChatActivity.class);
+            intent.putExtra("otherUserId", userId);
+            startActivity(intent);
         }
     }
 
