@@ -43,7 +43,7 @@ public class FindFriendActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.findFriendAppBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add/Find Friends");
+        getSupportActionBar().setTitle("Find Friends");
         addFindFriendRecyclerView = findViewById(R.id.findFriendRecyclerView);
         addFindFriendRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 

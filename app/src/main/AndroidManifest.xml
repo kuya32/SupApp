@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SupApp">
-        <activity android:name=".ViewFriendActivity"></activity>
+        <activity android:name=".FriendActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity
+            android:name=".ViewFriendActivity"
+            android:parentActivityName=".FindFriendActivity" />
         <activity android:name=".FindFriendActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SetUpActivity" />

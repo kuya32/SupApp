@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -358,7 +359,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.friends) {
-
+            Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+            startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.addFindFriends) {
             Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
             startActivity(intent);

@@ -102,29 +102,30 @@
                 app:layout_constraintTop_toBottomOf="@+id/viewFriendProfessionText" />
 
             <Button
-                android:id="@+id/sendRequestButton"
+                android:id="@+id/positiveButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:backgroundTint="@color/green"
                 android:padding="15dp"
-                android:text="SEND REQUEST"
+                android:text="Send Request"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <Button
-                android:id="@+id/declineRequestButton"
+                android:id="@+id/negativeButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:backgroundTint="@color/red"
                 android:padding="15dp"
                 android:text="DECLINE REQUEST"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.452"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sendRequestButton" />
+                app:layout_constraintTop_toBottomOf="@+id/positiveButton" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
