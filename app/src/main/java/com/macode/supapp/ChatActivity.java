@@ -54,7 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText chatMessageInput;
     private ImageView chatAddImage, sendMessageButton;
     private RecyclerView chatRecyclerView;
-    private String otherUserId, otherUsername, otherUserProfileImageUrl, otherUserStatus, chatMessageString, userProfileImageUrl;
+    private String otherUserId, otherUsername, otherUserProfileImageUrl, otherUserStatus, chatMessageString, userProfileImageUrl, username;
     private DatabaseReference userReference, messageReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -106,6 +106,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     userProfileImageUrl = snapshot.child("profileImage").getValue().toString();
+                    username = snapshot.child("username").getValue().toString();
                 }
             }
 
@@ -186,10 +187,15 @@ public class ChatActivity extends AppCompatActivity {
         try {
             jsonObject.put("to", "/topics/" + otherUserId);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("username", "Message from " + otherUsername);
+            jsonObject1.put("username", "Message from " + username);
             jsonObject1.put("body", message);
 
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("userId", firebaseUser.getUid());
+            jsonObject2.put("type", "message");
+
             jsonObject.put("notification", jsonObject1);
+            jsonObject.put("data", jsonObject2);
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jsonObject, new Response.Listener<JSONObject>() {
                 @Override
