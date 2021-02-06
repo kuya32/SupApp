@@ -38,6 +38,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -104,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         likeReference = FirebaseDatabase.getInstance().getReference().child("Likes");
         commentReference = FirebaseDatabase.getInstance().getReference().child("Comments");
         postImageReference = FirebaseStorage.getInstance().getReference().child("PostImages");
+
+        FirebaseMessaging.getInstance().subscribeToTopic(firebaseUser.getUid());
 
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -375,7 +379,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.chat) {
-
+            Intent intent = new Intent(MainActivity.this, ChatUsersActivity.class);
+            startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.logout) {
             firebaseAuth.signOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);

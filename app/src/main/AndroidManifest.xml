@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SupApp">
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatUsersActivity"></activity>
+        <activity android:name=".ChatActivity" />
         <activity android:name=".ImageViewActivity" />
         <activity android:name=".FriendActivity" />
         <activity android:name=".ForgotPasswordActivity" />
@@ -33,6 +34,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+        <service
+            android:name=".utilities.MyFirebaseMessagingService"
+            android:exported="false"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

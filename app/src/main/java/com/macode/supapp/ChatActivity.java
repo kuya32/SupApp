@@ -15,6 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,7 +37,11 @@ import com.macode.supapp.utilities.Chats;
 import com.macode.supapp.utilities.ChatsViewHolder;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Inflater;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,12 +54,14 @@ public class ChatActivity extends AppCompatActivity {
     private EditText chatMessageInput;
     private ImageView chatAddImage, sendMessageButton;
     private RecyclerView chatRecyclerView;
-    private String otherUserId, otherUsername, otherUserProfileImageUrl, otherUserStatus, chatMessageString;
+    private String otherUserId, otherUsername, otherUserProfileImageUrl, otherUserStatus, chatMessageString, userProfileImageUrl;
     private DatabaseReference userReference, messageReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseRecyclerOptions<Chats> chatOptions;
     private FirebaseRecyclerAdapter<Chats, ChatsViewHolder> chatAdapter;
+    private String URL = "https://fcm.googlepis.com/fcm/send";
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        requestQueue = Volley.newRequestQueue(this);
         profileImageAppBar = findViewById(R.id.profileImageChatAppBar);
         usernameAppBar = findViewById(R.id.usernameChatAppBar);
         statusAppBar = findViewById(R.id.statusChatAppBar);
@@ -74,6 +88,7 @@ public class ChatActivity extends AppCompatActivity {
 
         otherUserId = getIntent().getStringExtra("otherUserId");
 
+        loadUserProfileImage();
         loadOtherUsers();
         loadMessages();
 
@@ -81,6 +96,22 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessage();
+            }
+        });
+    }
+
+    private void loadUserProfileImage() {
+        userReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    userProfileImageUrl = snapshot.child("profileImage").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ChatActivity.this, "" + error.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -97,6 +128,7 @@ public class ChatActivity extends AppCompatActivity {
                     holder.secondUserProfileImage.setVisibility(View.VISIBLE);
 
                     holder.secondUserMessage.setText(model.getMessage());
+                    Picasso.get().load(userProfileImageUrl).into(holder.secondUserProfileImage);
                 } else {
                     holder.firstUserMessage.setVisibility(View.VISIBLE);
                     holder.firstUserProfileImage.setVisibility(View.VISIBLE);
@@ -104,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
                     holder.secondUserProfileImage.setVisibility(View.GONE);
 
                     holder.firstUserMessage.setText(model.getMessage());
-                    Picasso.get().load(otherUserProfileImageUrl).into(holder.secondUserProfileImage);
+                    Picasso.get().load(otherUserProfileImageUrl).into(holder.firstUserProfileImage);
                 }
             }
 
@@ -137,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
+                                    sendNotification(chatMessageString);
                                     chatMessageInput.setText(null);
                                     Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 }
@@ -145,6 +178,43 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    private void sendNotification(String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("to", "/topics/" + otherUserId);
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("username", "Message from " + otherUsername);
+            jsonObject1.put("body", message);
+
+            jsonObject.put("notification", jsonObject1);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> map = new HashMap<>();
+                    String key = getResources().getString(R.string.googleFirebaseCloudMessagingKey);
+                    map.put("content-type", "application/json");
+                    map.put("authorization", key);
+                    return map;
+                }
+            };
+            requestQueue.add(request);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
