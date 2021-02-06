@@ -23,10 +23,10 @@ import com.macode.supapp.utilities.Friends;
 import com.macode.supapp.utilities.FriendsViewHolder;
 import com.squareup.picasso.Picasso;
 
-public class FriendActivity extends AppCompatActivity {
+public class ChatUsersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private RecyclerView friendRecyclerView;
+    private RecyclerView chatUsersRecyclerView;
     private FirebaseRecyclerOptions<Friends> friendsOptions;
     private FirebaseRecyclerAdapter<Friends, FriendsViewHolder> friendsAdapter;
     private FirebaseAuth firebaseAuth;
@@ -36,15 +36,15 @@ public class FriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend);
+        setContentView(R.layout.activity_chat_users);
 
-        toolbar = findViewById(R.id.friendsAppBar);
+        toolbar = findViewById(R.id.chatUsersAppBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Friends");
+        getSupportActionBar().setTitle("Chat with Users");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        friendRecyclerView = findViewById(R.id.friendsRecyclerView);
-        friendRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatUsersRecyclerView = findViewById(R.id.chatUsersRecyclerView);
+        chatUsersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Friends");
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -65,7 +65,7 @@ public class FriendActivity extends AppCompatActivity {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(FriendActivity.this, ChatActivity.class);
+                        Intent intent = new Intent(ChatUsersActivity.this, ChatActivity.class);
                         intent.putExtra("otherUserId", getRef(position).getKey().toString());
                         startActivity(intent);
                     }
@@ -81,6 +81,6 @@ public class FriendActivity extends AppCompatActivity {
             }
         };
         friendsAdapter.startListening();
-        friendRecyclerView.setAdapter(friendsAdapter);
+        chatUsersRecyclerView.setAdapter(friendsAdapter);
     }
 }
