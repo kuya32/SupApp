@@ -83,6 +83,15 @@ public class ViewFriendActivity extends AppCompatActivity {
             }
         });
 
+        viewFriendProfileImageUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewFriendActivity.this, ImageViewActivity.class);
+                intent.putExtra("url", profileImageUrl);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void friendshipOver(String userId) {
