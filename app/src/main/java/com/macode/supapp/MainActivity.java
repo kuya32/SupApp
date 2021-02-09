@@ -373,25 +373,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.profile) {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
-            finish();
         } else if (item.getItemId() == R.id.friends) {
             Intent intent = new Intent(MainActivity.this, FriendActivity.class);
             startActivity(intent);
-            finish();
         } else if (item.getItemId() == R.id.addFindFriends) {
             Intent intent = new Intent(MainActivity.this, FindFriendActivity.class);
             startActivity(intent);
-            finish();
         } else if (item.getItemId() == R.id.chat) {
             Intent intent = new Intent(MainActivity.this, ChatUsersActivity.class);
             startActivity(intent);
-            finish();
         } else if (item.getItemId() == R.id.logout) {
             firebaseUserReference.child(firebaseUser.getUid()).child("status").setValue("Offline");
             firebaseAuth.signOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish();
         } else {
             Toast.makeText(this, "Impossibru! How did you do this!", Toast.LENGTH_LONG).show();
         }
