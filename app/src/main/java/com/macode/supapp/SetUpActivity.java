@@ -50,6 +50,7 @@ public class SetUpActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
     private Toolbar toolbar;
+    private CardView savingDataProgressCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class SetUpActivity extends AppCompatActivity {
         phoneNumberInput = findViewById(R.id.setUpPhoneInput);
         professionInput = findViewById(R.id.setUpProfessionInput);
         saveButton = findViewById(R.id.setUpSaveButton);
+        savingDataProgressCardView = findViewById(R.id.savingDataProgressCardView);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -92,6 +94,7 @@ public class SetUpActivity extends AppCompatActivity {
     }
 
     private void saveData() {
+        savingDataProgressCardView.setVisibility(View.VISIBLE);
         username = usernameInput.getText().toString();
         cityAndState = cityAndStateInput.getText().toString();
         phoneNumber = phoneNumberInput.getText().toString();
@@ -126,6 +129,7 @@ public class SetUpActivity extends AppCompatActivity {
                                 databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                                     @Override
                                     public void onSuccess(Object o) {
+                                        savingDataProgressCardView.setVisibility(View.INVISIBLE);
                                         Intent intent = new Intent(SetUpActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         Toast.makeText(SetUpActivity.this, "Setup profile completed!", Toast.LENGTH_SHORT).show();
