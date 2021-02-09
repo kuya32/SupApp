@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseRecyclerOptions<Posts> options;
     private FirebaseRecyclerOptions<Comments> commentOptions;
     private RecyclerView recyclerView;
-
+    private CardView addingPostProgressCardView;
     private ProgressBar addingPostProgressBar;
 
 
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addingPostProgressBar = findViewById(R.id.addingPostProgressBar);
         recyclerView = findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        addingPostProgressCardView = findViewById(R.id.addingPostProgressCardView);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (imageUri == null) {
             Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
         } else {
-            addingPostProgressBar.setVisibility(View.VISIBLE);
+            addingPostProgressCardView.setVisibility(View.VISIBLE);
             Date date = new Date();
             SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
             final String stringDate = format.format(date);
@@ -177,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 firebasePostReference.child(firebaseUser.getUid() + " " + stringDate).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
-                                        addingPostProgressBar.setVisibility(View.GONE);
+                                        addingPostProgressCardView.setVisibility(View.INVISIBLE);
                                         if (task.isSuccessful()) {
                                             Toast.makeText(MainActivity.this, "Post added", Toast.LENGTH_SHORT).show();
                                             addImagePost.setImageResource(R.drawable.ic_add_post_image);
@@ -198,7 +201,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadPosts() {
-        options = new FirebaseRecyclerOptions.Builder<Posts>().setQuery(firebasePostReference, Posts.class).build();
+        Query query = firebasePostReference.orderByChild("datePost");
+        options = new FirebaseRecyclerOptions.Builder<Posts>().setQuery(query, Posts.class).build();
         adapter = new FirebaseRecyclerAdapter<Posts, MyViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Posts model) {
@@ -274,10 +278,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void loadComments(String postKey) {
         MyViewHolder.commentRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        commentOptions = new FirebaseRecyclerOptions.Builder<Comments>().setQuery(commentReference.child(postKey), Comments.class).build();
+        commentOptions = new FirebaseRecyclerOptions.Builder<Comments>().setQuery(commentReference.child(postKey).orderByChild("commentDate").limitToLast(10), Comments.class).build();
         commentAdapter = new FirebaseRecyclerAdapter<Comments, CommentViewHolder>(commentOptions) {
             @Override
             protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Comments model) {
+
                 Picasso.get().load(model.getProfileImageUrl()).into(holder.profileImageComment);
                 holder.commentUsername.setText(model.getUsername());
                 String timeAgo = calculateTimeAgo(model.getCommentDate());
@@ -365,7 +370,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.home) {
-
         } else if (item.getItemId() == R.id.profile) {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
@@ -383,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.logout) {
+            firebaseUserReference.child(firebaseUser.getUid()).child("status").setValue("Offline");
             firebaseAuth.signOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);

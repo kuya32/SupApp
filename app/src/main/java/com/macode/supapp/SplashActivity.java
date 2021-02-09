@@ -40,8 +40,12 @@ public class SplashActivity extends AppCompatActivity {
                     databaseReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
+                            if (snapshot.child("username").exists()) {
                                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else if (snapshot.exists() && !snapshot.child("username").exists()) {
+                                Intent intent = new Intent(SplashActivity.this, SetUpActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {

@@ -7,7 +7,7 @@ public class Friends {
     public Friends() {
     }
 
-    public Friends(String profileImageUrl, String username, String profession) {
+    public Friends(String profileImageUrl, String username, String profession, String online) {
         this.profileImageUrl = profileImageUrl;
         this.username = username;
         this.profession = profession;

@@ -2,8 +2,11 @@ package com.macode.supapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private CircleImageView profileActivityImage;
     private String profileImageUrl, username, cityAndState, phoneNumber, profession;
     private EditText profileActivityUsernameInput, profileActivityCityAndStateInput, profileActivityPhoneInput, profileActivityProfessionInput;
@@ -34,6 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        toolbar = findViewById(R.id.profileAppBar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         profileActivityImage = findViewById(R.id.profileActivityImage);
         profileActivityUsernameInput = findViewById(R.id.profileActivityUsername);
         profileActivityCityAndStateInput = findViewById(R.id.profileActivityCityAndState);
@@ -72,5 +80,16 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

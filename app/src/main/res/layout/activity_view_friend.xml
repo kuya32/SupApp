@@ -87,6 +87,16 @@
                 app:layout_constraintStart_toStartOf="@+id/viewFriendCityAndState"
                 app:layout_constraintTop_toBottomOf="@+id/viewFriendCityAndState" />
 
+            <ImageView
+                android:id="@+id/statusImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_status_indicator"
+                app:layout_constraintEnd_toStartOf="@+id/viewFriendStatus"
+                app:layout_constraintStart_toStartOf="@+id/viewFriendProfessionText"
+                app:layout_constraintTop_toBottomOf="@+id/viewFriendProfessionText" />
+
             <TextView
                 android:id="@+id/viewFriendStatus"
                 android:layout_width="wrap_content"
@@ -96,9 +106,10 @@
                 android:hint="Status"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
+
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@+id/viewFriendProfessionText"
-                app:layout_constraintStart_toStartOf="@+id/viewFriendProfessionText"
+                app:layout_constraintStart_toEndOf="@+id/statusImage"
                 app:layout_constraintTop_toBottomOf="@+id/viewFriendProfessionText" />
 
             <Button

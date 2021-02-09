@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class ViewFriendActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private CircleImageView viewFriendProfileImageUrl;
+    private ImageView statusIndicatorImage;
     private TextView viewFriendUsername, viewFriendCityAndState, viewFriendProfession, viewFriendStatus;
     private Button positiveButton, negativeButton;
 
@@ -61,6 +64,7 @@ public class ViewFriendActivity extends AppCompatActivity {
         viewFriendUsername = findViewById(R.id.viewFriendUsernameText);
         viewFriendCityAndState = findViewById(R.id.viewFriendCityAndState);
         viewFriendProfession = findViewById(R.id.viewFriendProfessionText);
+        statusIndicatorImage = findViewById(R.id.statusImage);
         viewFriendStatus = findViewById(R.id.viewFriendStatus);
         positiveButton = findViewById(R.id.positiveButton);
         negativeButton = findViewById(R.id.negativeButton);
@@ -340,6 +344,9 @@ public class ViewFriendActivity extends AppCompatActivity {
                     viewFriendUsername.setText(username);
                     viewFriendCityAndState.setText(cityAndState);
                     viewFriendProfession.setText(profession);
+                    if (status.equals("Online")) {
+                        statusIndicatorImage.setColorFilter(Color.GREEN);
+                    }
                     viewFriendStatus.setText(status);
                 } else {
                     Toast.makeText(ViewFriendActivity.this, "Data was not found", Toast.LENGTH_SHORT).show();
