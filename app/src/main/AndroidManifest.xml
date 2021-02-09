@@ -23,7 +23,8 @@
             android:name=".ViewFriendActivity"
             android:parentActivityName=".FindFriendActivity" />
         <activity android:name=".FindFriendActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".ProfileActivity" />
         <activity android:name=".SetUpActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />

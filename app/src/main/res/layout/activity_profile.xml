@@ -8,7 +8,7 @@
     tools:context=".ProfileActivity">
 
     <include
-        android:id="@+id/setUpAppBar"
+        android:id="@+id/profileAppBar"
         layout="@layout/main_appbar" />
 
     <androidx.cardview.widget.CardView

@@ -45,6 +45,7 @@ public class FindFriendActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.findFriendAppBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Find Friends");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addFindFriendRecyclerView = findViewById(R.id.findFriendRecyclerView);
         addFindFriendRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -113,5 +114,16 @@ public class FindFriendActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(FindFriendActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
