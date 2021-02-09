@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
     private CircleImageView profileImageAppBar;
     private TextView usernameAppBar, statusAppBar;
     private EditText chatMessageInput;
-    private ImageView chatAddImage, sendMessageButton;
+    private ImageView chatAddImage, sendMessageButton, statusImageChatAppBar;
     private RecyclerView chatRecyclerView;
     private String otherUserId, otherUsername, otherUserProfileImageUrl, otherUserStatus, chatMessageString, userProfileImageUrl, username;
     private DatabaseReference userReference, messageReference;
@@ -75,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         profileImageAppBar = findViewById(R.id.profileImageChatAppBar);
         usernameAppBar = findViewById(R.id.usernameChatAppBar);
+        statusImageChatAppBar = findViewById(R.id.statusImageChatAppBar);
         statusAppBar = findViewById(R.id.statusChatAppBar);
         chatAddImage = findViewById(R.id.chatAddImage);
         sendMessageButton = findViewById(R.id.chatSendMessageButton);
@@ -236,6 +238,9 @@ public class ChatActivity extends AppCompatActivity {
                     Picasso.get().load(otherUserProfileImageUrl).into(profileImageAppBar);
                     usernameAppBar.setText(otherUsername);
                     statusAppBar.setText(otherUserStatus);
+                    if (otherUserStatus.equals("Online")) {
+                        statusImageChatAppBar.setColorFilter(Color.GREEN);
+                    }
                 }
             }
 
