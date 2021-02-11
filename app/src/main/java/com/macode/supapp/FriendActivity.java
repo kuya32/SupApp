@@ -89,8 +89,6 @@ public class FriendActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
             finish();
         }
         return super.onOptionsItemSelected(item);

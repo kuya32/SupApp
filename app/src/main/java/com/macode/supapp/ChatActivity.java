@@ -252,12 +252,11 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            Intent intent = new Intent( .this, MainActivity.class);
-//            startActivity(intent);
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
