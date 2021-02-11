@@ -11,15 +11,6 @@
         android:id="@+id/setUpAppBar"
         layout="@layout/main_appbar" />
 
-    <FrameLayout
-        android:id="@+id/cropImageFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/setUpCardView"
         android:layout_width="0dp"

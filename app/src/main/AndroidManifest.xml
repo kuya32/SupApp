@@ -40,8 +40,8 @@
             android:theme="@style/Base.Theme.AppCompat"/>
         <service
             android:name=".utilities.MyFirebaseMessagingService"
-            android:directBootAware="true"
-            android:exported="false">
+            android:exported="false"
+            android:directBootAware="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

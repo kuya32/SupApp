@@ -63,7 +63,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseRecyclerOptions<Chats> chatOptions;
     private FirebaseRecyclerAdapter<Chats, ChatsViewHolder> chatAdapter;
-    private String URL = "https://fcm.googlepis.com/fcm/send";
+    private String URL = "https://fcm.googleapis.com/fcm/send";
     private RequestQueue requestQueue;
 
     @Override
@@ -73,6 +73,7 @@ public class ChatActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.chatAppBar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         requestQueue = Volley.newRequestQueue(this);
         profileImageAppBar = findViewById(R.id.profileImageChatAppBar);
@@ -190,7 +191,7 @@ public class ChatActivity extends AppCompatActivity {
         try {
             jsonObject.put("to", "/topics/" + otherUserId);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("username", "Message from " + username);
+            jsonObject1.put("title", "Message from " + username);
             jsonObject1.put("body", message);
 
             JSONObject jsonObject2 = new JSONObject();
@@ -214,9 +215,8 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> map = new HashMap<>();
-                    String key = getResources().getString(R.string.googleFirebaseCloudMessagingKey);
                     map.put("content-type", "application/json");
-                    map.put("authorization", key);
+                    map.put("authorization", "key=AAAAeztw5cQ:APA91bHEy4vkyUXi0Avww949jTb7f-pzukLmeTA-rvXZv9VTqGLnCaj7Wsn3qcBRVzx9JbEIoIPk0xKW8qjv1FbqsQagdhxYhnEJzLGov18x51924vvNwGf3gse7YHAlGQgOm-NJ8r4t");
                     return map;
                 }
             };
