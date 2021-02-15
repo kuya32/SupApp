@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/kuya32/SupApp">
-    <img src="images/supAppLogo.png" alt="Sup App Logo" width="80" height="80">
+    <img src="images/supAppLogo.png" alt="Sup App Logo" width="250" height="250">
   </a>
 
   <h3 align="center">Sup App</h3>
